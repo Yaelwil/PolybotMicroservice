@@ -4,7 +4,6 @@ import flask
 from flask import request, jsonify
 import boto3
 from bot import ObjectDetectionBot
-from get_secrets import get_secret
 import results
 from get_cert import get_cert
 
