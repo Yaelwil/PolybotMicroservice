@@ -12,26 +12,18 @@ from responses import load_responses
 class Bot:
 
     def __init__(self, token, telegram_chat_url):
-        # # create a new instance of the TeleBot class.
-        # # all communication with Telegram servers are done using self.telegram_bot_client
-        # self.telegram_bot_client = telebot.TeleBot(token)
-        # # remove any existing webhooks configured in Telegram servers
-        # time.sleep(0.5)
-        #
-        # # set the webhook URL
-        # self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}:8443/{token}/', timeout=60)
-        # # self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}/{token}/', timeout=60)
-        # logger.info(f'Telegram Bot information\n\n{self.telegram_bot_client.get_me()}')
-        # self.responses = load_responses()
-
         # create a new instance of the TeleBot class.
         # all communication with Telegram servers are done using self.telegram_bot_client
         self.telegram_bot_client = telebot.TeleBot(token)
-
         # remove any existing webhooks configured in Telegram servers
         self.telegram_bot_client.remove_webhook()
-        self.responses = load_responses()
         time.sleep(0.5)
+        # set the webhook URL
+        self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}:8443/{token}/', timeout=60)
+        # self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}/{token}/', timeout=60)
+        logger.info(f'Telegram Bot information\n\n{self.telegram_bot_client.get_me()}')
+        self.responses = load_responses()
+
 
     def send_text(self, chat_id, text):
         self.telegram_bot_client.send_message(chat_id, text)
