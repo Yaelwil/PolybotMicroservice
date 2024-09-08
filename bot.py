@@ -14,6 +14,7 @@ class Bot:
     def __init__(self, token, telegram_chat_url):
         # create a new instance of the TeleBot class.
         # all communication with Telegram servers are done using self.telegram_bot_client
+        logger.info(f"url=f'{telegram_chat_url}:8443/{token}/")
         self.telegram_bot_client = telebot.TeleBot(token)
         # remove any existing webhooks configured in Telegram servers
         self.telegram_bot_client.remove_webhook()
