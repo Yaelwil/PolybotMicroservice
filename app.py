@@ -15,9 +15,10 @@ TELEGRAM_APP_URL = os.environ["TELEGRAM_APP_URL"]
 DYNAMODB_TABLE_NAME = os.environ["DYNAMODB_TABLE_NAME"]
 BUCKET_NAME = os.environ["BUCKET_NAME"]
 alb_url = os.environ["ALB_URL"]
+prefix = os.environ["CERT_PREFIX"]
+
 print(f"TELEGRAM_APP_URL: {TELEGRAM_APP_URL}")
 
-prefix = "yaelwil-certificate"
 # secret_name_1 = "TELEGRAM_TOKEN_EU_WEST_1"
 # secret_name_2 = "TELEGRAM_TOKEN_US_EAST_1"
 DOMAIN_CERTIFICATE = get_cert(prefix)
