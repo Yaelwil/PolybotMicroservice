@@ -11,22 +11,20 @@ from responses import load_responses
 
 class Bot:
 
-    def __init__(self, token, telegram_chat_url):
+    def __init__(self, token, telegram_chat_url, domain_certificate_file):
         # create a new instance of the TeleBot class.
         # all communication with Telegram servers are done using self.telegram_bot_client
-        logger.info(f"url=f'{telegram_chat_url}:8443/{token}/")
         self.telegram_bot_client = telebot.TeleBot(token)
         # remove any existing webhooks configured in Telegram servers
         self.telegram_bot_client.remove_webhook()
-        logger.info("removed webhook")
         time.sleep(0.5)
+
         # set the webhook URL
-        # self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}:8443/{token}/', timeout=60)
-        self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}', timeout=60)
+        with open(domain_certificate_file, 'rb') as cert:
+            self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}:8443/{token}/', certificate=cert, timeout=60)
         # self.telegram_bot_client.set_webhook(url=f'{telegram_chat_url}/{token}/', timeout=60)
         logger.info(f'Telegram Bot information\n\n{self.telegram_bot_client.get_me()}')
         self.responses = load_responses()
-
 
     def send_text(self, chat_id, text):
         self.telegram_bot_client.send_message(chat_id, text)
@@ -119,11 +117,10 @@ class Bot:
             default_response = random.choice(self.responses['default'])
             self.send_text(msg['chat']['id'], default_response)
 
-
 class ObjectDetectionBot(Bot):
 
-    def __init__(self, token, telegram_chat_url):
-        super().__init__(token, telegram_chat_url)
+    def __init__(self, token, telegram_chat_url, domain_certificate_file):
+        super().__init__(token, telegram_chat_url, domain_certificate_file)
         self.responses = load_responses()
 
     def handle_message(self, msg):
