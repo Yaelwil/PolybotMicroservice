@@ -1,13 +1,13 @@
 import boto3
 import os
+from loguru import logger
 
-# region_name = os.environ["REGION"]
 region_name = os.environ["REGION"]
 
 def get_cert(prefix):
     # Create a Secrets Manager client
     client = boto3.client('secretsmanager', region_name=region_name)
-
+    print(client)
     try:
         # Initialize an empty list to hold matching secrets
         matching_secrets = []
@@ -25,8 +25,10 @@ def get_cert(prefix):
             secret_value = client.get_secret_value(SecretId=secret_name)
             return secret_value['SecretString']
         else:
+            logger.info(f"No secrets found with prefix {prefix}")
             print(f"No secrets found with prefix {prefix}")
             return None
     except Exception as e:
+        logger.info(f"Error retrieving secrets: {str(e)}")
         print(f"Error retrieving secrets: {str(e)}")
         return None
