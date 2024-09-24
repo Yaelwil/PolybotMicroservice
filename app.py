@@ -17,7 +17,7 @@ BUCKET_NAME = os.environ["BUCKET_NAME"]
 alb_url = os.environ["ALB_URL"]
 print(f"TELEGRAM_APP_URL: {TELEGRAM_APP_URL}")
 
-prefix = "yaelwil-certificate"
+prefix = os.environ["CERT_PREFIX"]
 # secret_name_1 = "TELEGRAM_TOKEN_EU_WEST_1"
 # secret_name_2 = "TELEGRAM_TOKEN_US_EAST_1"
 DOMAIN_CERTIFICATE = get_cert(prefix)
