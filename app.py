@@ -20,6 +20,7 @@ TELEGRAM_TOKEN_PREFIX = os.environ["TELEGRAM_TOKEN_PREFIX"]
 print(f"TELEGRAM_APP_URL: {TELEGRAM_APP_URL}")
 
 TELEGRAM_TOKEN = get_secret(TELEGRAM_TOKEN_PREFIX)
+
 if TELEGRAM_TOKEN:
     logger.info('Retrieved TELEGRAM_TOKEN from Secrets Manager')
 else:
