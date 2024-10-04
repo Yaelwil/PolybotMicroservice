@@ -10,19 +10,23 @@ from get_cert import get_cert
 
 app = flask.Flask(__name__)
 REGION = os.environ["REGION"]
-TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 TELEGRAM_APP_URL = os.environ["TELEGRAM_APP_URL"]
 DYNAMODB_TABLE_NAME = os.environ["DYNAMODB_TABLE_NAME"]
 BUCKET_NAME = os.environ["BUCKET_NAME"]
 alb_url = os.environ["ALB_URL"]
+cert_prefix = os.environ["CERT_PREFIX"]
+TELEGRAM_TOKEN_PREFIX = os.environ["TELEGRAM_TOKEN_PREFIX"]
+
 print(f"TELEGRAM_APP_URL: {TELEGRAM_APP_URL}")
 
-prefix = os.environ["CERT_PREFIX"]
-# secret_name_1 = "TELEGRAM_TOKEN_EU_WEST_1"
-# secret_name_2 = "TELEGRAM_TOKEN_US_EAST_1"
-DOMAIN_CERTIFICATE = get_cert(prefix)
-# TELEGRAM_TOKEN_EU_WEST_1 = get_secret(secret_name_1)
-# TELEGRAM_TOKEN_US_EAST_1 = get_secret(secret_name_2)
+TELEGRAM_TOKEN = get_secret(TELEGRAM_TOKEN_PREFIX)
+
+if TELEGRAM_TOKEN:
+    logger.info('Retrieved TELEGRAM_TOKEN from Secrets Manager')
+else:
+    raise ValueError("Failed to retrieve secret TELEGRAM_TOKEN from Secrets Manager")
+
+DOMAIN_CERTIFICATE = get_cert(cert_prefix)
 
 if DOMAIN_CERTIFICATE:
     logger.info('Retrieved DOMAIN_CERTIFICATE from Secrets Manager')
@@ -35,12 +39,6 @@ with open(domain_certificate_file, 'w') as file:
     file.write(DOMAIN_CERTIFICATE)
 
 logger.info('Created certificate file successfully')
-
-# # Make sure to use the correct variable
-# region_upper = REGION.upper()
-# # Example of constructing variable name dynamically (Note: this may need adjustment based on how tokens are handled)
-# telegram_token_env_var = f"TELEGRAM_TOKEN_{region_upper}"
-# TELEGRAM_TOKEN = os.environ.get(telegram_token_env_var)
 
 # Initialize bot outside of __main__ block
 bot = ObjectDetectionBot(TELEGRAM_TOKEN, TELEGRAM_APP_URL, domain_certificate_file)
